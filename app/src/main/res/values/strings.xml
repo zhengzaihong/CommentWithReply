@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CommentWithReply</string>
+    <string name="comment_reply"> 回复 </string>
+</resources>

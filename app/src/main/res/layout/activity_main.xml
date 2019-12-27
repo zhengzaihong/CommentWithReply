@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+
+    <!--    <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+    <!--        android:id="@+id/main_content"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:fitsSystemWindows="true">-->
+
+
+    <!--        <com.google.android.material.appbar.AppBarLayout-->
+    <!--            android:id="@+id/app_bar"-->
+    <!--            android:fitsSystemWindows="true"-->
+    <!--            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <!--            <com.google.android.material.appbar.CollapsingToolbarLayout-->
+    <!--                app:contentScrim="@color/trans"-->
+    <!--                android:fitsSystemWindows="true"-->
+    <!--                app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content">-->
+
+    <!--                <ImageView-->
+    <!--                    app:layout_collapseMode="parallax"-->
+    <!--                    android:background="@drawable/icon_bg"-->
+    <!--                    android:scaleType="centerCrop"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="250dp" />-->
+
+    <!--                <androidx.appcompat.widget.Toolbar-->
+    <!--                    app:layout_collapseMode="pin"-->
+    <!--                    app:titleTextColor="#ffffff"-->
+    <!--                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+    <!--                    app:title="一巴掌拍出两坨脂肪"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="?actionBarSize" />-->
+    <!--            </com.google.android.material.appbar.CollapsingToolbarLayout>-->
+    <!--        </com.google.android.material.appbar.AppBarLayout>-->
+
+    <!--        <androidx.core.widget.NestedScrollView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+    <!--            <com.zzh.commentwithreply.view.NestedListView-->
+    <!--                android:background="@color/white"-->
+    <!--                android:id="@+id/llContent"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="match_parent"/>-->
+    <!--        </androidx.core.widget.NestedScrollView>-->
+
+
+    <!--    </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
+
+
+    <ListView
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:id="@+id/llContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/rlComment"
+        android:visibility="gone"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/layout_comment_view"></include>
+    </RelativeLayout>
+
+</LinearLayout>

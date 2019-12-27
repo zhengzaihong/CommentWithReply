@@ -1,0 +1,2 @@
+include ':app', ':corelib'
+rootProject.name='CommentWithReply'
