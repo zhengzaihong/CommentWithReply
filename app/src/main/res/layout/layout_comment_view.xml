@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:e_normalBgColor="@color/trans"
-                app:e_normalStrokeColor="@color/gray"
+                app:e_normalStrokeColor="@color/trans"
                 app:e_pressedBgColor="@color/trans"
                 app:e_normalStrokeWidth="1dp"
                 app:e_pressStrokeWidth="1dp"
@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
             <FrameLayout

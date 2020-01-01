@@ -68,5 +68,4 @@ public interface FillCommentListener<T> {
     void userReplyUser(T item, CommentWithReplyLayout viewLayout);
 
 
-
 }

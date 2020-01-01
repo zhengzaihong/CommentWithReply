@@ -84,10 +84,10 @@ public class DataHelper {
         configure.setSingleImageSize(250)//设置单张图片固定宽高
                 .setSingleFixed(false)//设置单张图片固定宽高
                 .setRectAdius(10)//设置宫格视图图片圆角度数
-                .setColumnNum(3)//设置宫格视图列数
+                .setColumnNum(2)//设置宫格视图列数
                 .setMaxImageSize(9)//设置最大显示多少张
                 .setGridSpacing(10)//设置宫格视图的间距
-                .setMode(NineGridViewConfigure.MODE_FILL) //设置图片布局模式
+                .setMode(NineGridViewConfigure.MODE_GRID) //设置图片布局模式
                 .setSingleImageRatio(1.0f)//设置单张图片的缩放比例
                 .setEnablePre(true)//是否开启预览
                 .setMoreTextColor(application.getResources().getColor(R.color.amber_200))//设置超过最大张数显示的文本颜色
@@ -124,7 +124,7 @@ public class DataHelper {
                                 .fitCenter()
                                 .placeholder(R.mipmap.ic_launcher)
                                 .error(R.drawable.ic_default_color)
-//                                .override(100, 100)
+                                .override(150, 150)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imageView);
                     }

@@ -1,7 +1,7 @@
 package com.zzh.commentwithreply.utils;
 
 import com.zzh.commentwithreply.R;
-import com.zzh.corelib.utils.EmojiUtils;
+import com.zzh.corelib.emoji.EmojiFactory;
 
 import java.util.LinkedHashMap;
 
@@ -15,7 +15,7 @@ public class EmojiTools {
 
 
     public static void initEmoji() {
-        EmojiUtils.appendEmoji(emojiPack);
+        EmojiFactory.create().setPack(emojiPack);
     }
 
 

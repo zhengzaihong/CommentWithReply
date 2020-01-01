@@ -174,6 +174,34 @@ public class ActionBean {
             public void setContent(String content) {
                 this.content = content;
             }
+
+            @Override
+            public String toString() {
+                return "ReplyListBean{" +
+                        "nickName='" + nickName + '\'' +
+                        ", status='" + status + '\'' +
+                        ", content='" + content + '\'' +
+                        ", authorNickName='" + authorNickName + '\'' +
+                        ", authorReplyContent='" + authorReplyContent + '\'' +
+                        ", userNickName='" + userNickName + '\'' +
+                        ", userReplyContent='" + userReplyContent + '\'' +
+                        '}';
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "id='" + id + '\'' +
+                    ", nickName='" + nickName + '\'' +
+                    ", userLogo='" + userLogo + '\'' +
+                    ", content='" + content + '\'' +
+                    ", createDate='" + createDate + '\'' +
+                    ", images=" + images +
+                    ", replyList=" + replyList +
+                    '}';
         }
     }
+
+
 }

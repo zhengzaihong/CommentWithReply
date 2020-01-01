@@ -2,7 +2,6 @@ package com.zzh.corelib.view;
 
 import android.content.Context;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.zzh.corelib.config.CommentLayoutConfig;
-import com.zzh.corelib.utils.EmojiUtils;
+import com.zzh.corelib.emoji.EmojiHelper;
 
 import static com.zzh.corelib.interfaces.FillCommentListener.AUTHOR_REPLY;
 import static com.zzh.corelib.interfaces.FillCommentListener.COMMENT_AUTHOR;
@@ -145,7 +144,7 @@ public class CommentWithReplyLayout extends LinearLayout {
 
             //解析表情并配置颜色
             spannableString = new SpannableString(buffer.toString());
-            spannableString = EmojiUtils.parseEmoji(mContext, spannableString, buffer.toString());
+            spannableString = EmojiHelper.getInstance().parseEmoji(mContext, spannableString, buffer.toString());
             spannableString.setSpan(new ForegroundColorSpan(nickNameColor), 0, selfLength, SPAN_INCLUSIVE_EXCLUSIVE);
             spannableString.setSpan(new ForegroundColorSpan(tipsColor), selfLength, selfLength + reply.length(), SPAN_INCLUSIVE_EXCLUSIVE);
             spannableString.setSpan(new ForegroundColorSpan(nickNameColor), startToUserLength, startToContentLength, SPAN_INCLUSIVE_EXCLUSIVE);
@@ -158,7 +157,7 @@ public class CommentWithReplyLayout extends LinearLayout {
 
             //解析表情并配置颜色
             spannableString = new SpannableString(buffer.toString());
-            spannableString = EmojiUtils.parseEmoji(mContext, spannableString, buffer.toString());
+            spannableString = EmojiHelper.getInstance().parseEmoji(mContext, spannableString, buffer.toString());
             spannableString.setSpan(new ForegroundColorSpan(nickNameColor), 0, selfLength, SPAN_INCLUSIVE_EXCLUSIVE);
         }
 

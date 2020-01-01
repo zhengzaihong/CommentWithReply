@@ -12,10 +12,12 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 
 import com.zzh.corelib.R;
+import com.zzh.corelib.utils.Collections;
 import com.zzh.corelib.utils.Utils;
 import com.zzh.corelib.config.CommentLayoutConfig;
 import com.zzh.corelib.interfaces.CommentItemClickListener;
 import com.zzh.corelib.interfaces.FillCommentListener;
+
 
 import java.util.List;
 
@@ -69,7 +71,7 @@ public class CommentWithReplyContainer extends LinearLayout {
         commentLayoutConfig.setTextColor(ta.getColor(R.styleable.CommentStyle_textColor, Color.parseColor("#666666")))
                 .setNickNameColor(ta.getColor(R.styleable.CommentStyle_nickNameColor, Color.parseColor("#81d4fa")))
                 .setReplySplitColor(ta.getColor(R.styleable.CommentStyle_replySplitColor, Color.parseColor("#666666")))
-                .setTextSize((int) Utils.px2sp(mContext,ta.getDimensionPixelSize(R.styleable.CommentStyle_textSize, 14)))
+                .setTextSize((int) Utils.px2sp(mContext, ta.getDimensionPixelSize(R.styleable.CommentStyle_textSize, 14)))
                 .setReplyTips(TextUtils.isEmpty(ta.getString(R.styleable.CommentStyle_replyTips)) ?
                         commentLayoutConfig.getReplyTips() : ta.getString(R.styleable.CommentStyle_replyTips));
 
@@ -85,44 +87,39 @@ public class CommentWithReplyContainer extends LinearLayout {
      * @param datas        所有的动态数据源
      */
     public void setData(final int itemPosition, List<?> datas) {
-
-        if (null == datas || datas.size() == 0) {
+        this.removeAllViews();
+        if (Collections.isEmptyList(datas)) {
             return;
         }
+        if (null == commentListener) {
+            throw new IllegalArgumentException("请先设置 FillCommentListener 监听后再添加数据");
+        }
 
-        if (null != commentListener) {
-            this.removeAllViews();
-            for (int i = 0; i < datas.size(); i++) {
-                final int index = i;
-                CommentWithReplyLayout viewLine = getCommentWithReplyLayout();
-                final Object obj = datas.get(i);
+        for (int i = 0; i < datas.size(); i++) {
+            final int index = i;
+            CommentWithReplyLayout viewLine = getCommentWithReplyLayout();
+            final Object obj = datas.get(i);
 
-                //匹配评论类型
-                int type = commentListener.commentType(obj);
-                if (type == AUTHOR_REPLY) {
-                    commentListener.authorReply(obj, viewLine);
-                } else if (type == REPLY_AUTHOR) {
-                    commentListener.replyAuthor(obj, viewLine);
-                } else if (type == COMMENT_AUTHOR) {
-                    commentListener.commentAuthor(obj, viewLine);
-                } else if (type == USER_USER) {
-                    commentListener.userReplyUser(obj, viewLine);
-                }
-
-                //添加 每行评论的点击事件
-                viewLine.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        commentItemClickListener.onClick(itemPosition, index, obj);
-                    }
-                });
-
-                //填充到容器
-                this.addView(viewLine);
+            //匹配评论类型
+            int type = commentListener.commentType(obj);
+            if (type == AUTHOR_REPLY) {
+                commentListener.authorReply(obj, viewLine);
+            } else if (type == REPLY_AUTHOR) {
+                commentListener.replyAuthor(obj, viewLine);
+            } else if (type == COMMENT_AUTHOR) {
+                commentListener.commentAuthor(obj, viewLine);
+            } else if (type == USER_USER) {
+                commentListener.userReplyUser(obj, viewLine);
             }
-        } else {
-            Log.e(TAG, "请先设置FillCommentListener 监听后再添加数据");
-            throw new IllegalArgumentException();
+            //添加 每行评论的点击事件
+            viewLine.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    commentItemClickListener.onClick(itemPosition, index, obj);
+                }
+            });
+            //填充到容器
+            this.addView(viewLine);
         }
     }
 

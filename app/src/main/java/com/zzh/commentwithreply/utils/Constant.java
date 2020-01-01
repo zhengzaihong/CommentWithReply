@@ -8,7 +8,7 @@ public class Constant {
             "\t\t\t\"id\": \"41\",\n" +
             "\t\t\t\"nickName\": \"独自悲伤\",\n" +
             "\t\t\t\"userLogo\": \"https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2229864841,4232235061&fm=26&gp=0.jpg\",\n" +
-            "\t\t\t\"content\": \"优于别人，并不高贵，真正的高贵，应该是优于过去的自己；人生就是不断成长，继续走好自己的路，拿得起，放得下，走得好。\",\n" +
+            "\t\t\t\"content\": \"优于别人，并不高贵，真正的高贵，xxxxxxxxxxxxxxxxxxxxxxx。\",\n" +
             "\t\t\t\"createDate\": \"1分钟前\"\n" +
             "\t\t},\n" +
             "\t\t{\n" +
@@ -48,13 +48,13 @@ public class Constant {
             "\t\t\t\"replyList\": [{\n" +
             "\t\t\t\t\"nickName\": \"吴庚\",\n" +
             "\t\t\t\t\"status\": \"1\",\n" +
-            "\t\t\t\t\"content\": \"我失眠\"\n" +
+            "\t\t\t\t\"content\": \"我失眠......\"\n" +
             "\n" +
             "\t\t\t}, {\n" +
             "\t\t\t\t\"nickName\": \"吴庚\",\n" +
             "\t\t\t\t\"status\": \"3\",\n" +
             "\t\t\t\t\"userNickName\": \"独自悲伤\",\n" +
-            "\t\t\t\t\"userReplyContent\": \"来一榔头就睡着了\"\n" +
+            "\t\t\t\t\"userReplyContent\": \"来一榔头就睡着了asfafadfadfdf\"\n" +
             "\t\t\t}]\n" +
             "\t\t}, {\n" +
             "\t\t\t\"id\": \"44\",\n" +
