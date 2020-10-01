@@ -1,5 +1,6 @@
 package com.zzh.commentwithreply.ui
 
+import android.app.ProgressDialog.show
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +10,18 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.dz.ninegridimages.config.NineGridViewConfigure
+import com.dz.ninegridimages.config.NineGridViewConfigure.Companion.MODE_FILL
+import com.dz.ninegridimages.interfaces.ImageLoader
 import com.dz.ninegridimages.view.NineGridView
-import com.dz.utlis.JavaUtils
-import com.dz.utlis.KeyBoardUtils
-import com.dz.utlis.ToastTool
+import com.dz.utlis.*
+import com.emoji.core.interfaces.EmojiViewListener
+import com.emoji.core.utils.EmotionInputDetector
 import com.google.gson.Gson
+import com.room.core.config.MsgType
+import com.room.core.interfaces.CommentItemClickListener
 import com.zzh.commentwithreply.R
 import com.zzh.commentwithreply.bean.ActionBean
 import com.zzh.commentwithreply.bean.ActionBean.DataBean
@@ -23,19 +31,16 @@ import com.zzh.commentwithreply.utils.Constant
 import com.zzh.commentwithreply.utils.DataHelper
 import com.zzh.commentwithreply.utils.DataHelper.urls
 import com.zzh.commentwithreply.utils.EmojiTools
-import com.zzh.corelib.interfaces.EmojiViewListener
-import com.zzh.corelib.interfaces.FillCommentListener
-import com.zzh.corelib.interfaces.FillCommentListener.*
-import com.zzh.corelib.ui.FaceUiHelper
-import com.zzh.corelib.view.CommentWithReplyContainer
-import com.zzh.corelib.view.CommentWithReplyLayout
+import com.room.core.interfaces.FillCommentListener
+import com.room.core.interfaces.OnPackingItemListener
+import com.room.core.view.CommentWithReplyContainer
+import com.room.core.view.CommentWithReplyLayout
 import dz.solc.viewtool.adapter.CommonAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_comment_view.*
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(),EmojiViewListener {
+class MainActivity : AppCompatActivity(), EmojiViewListener {
 
     override fun bindInputEditView(): EditText {
         return  et_input_container
@@ -56,19 +61,21 @@ class MainActivity : AppCompatActivity(),EmojiViewListener {
     }
 
     override fun bindContentView(): View {
-       return lvContent
+       return listViewContent
     }
 
 
 
     private var actionAdapter: ActionAdapter? = null
 
+    private lateinit var eEmotionInputDetector: EmotionInputDetector
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         actionAdapter = ActionAdapter(this)
-        lvContent.adapter = actionAdapter
+        listViewContent.adapter = actionAdapter
 
         val personInfoBean = Gson().fromJson(Constant.testJson, ActionBean::class.java)
 
@@ -90,9 +97,14 @@ class MainActivity : AppCompatActivity(),EmojiViewListener {
 
         EmojiTools.initEmoji()
 
-        FaceUiHelper.getInstance().startEmojiFragment(this, R.id.contanierFrameLayout, "0")
+        eEmotionInputDetector= EmotionInputDetector
+            .with(this)
+            .setEmojiViewListener(this)
+            .setPannelFragment(R.id.contanierFrameLayout, "0")
+            .create()
 
-        lvContent.setOnScrollListener(object : AbsListView.OnScrollListener {
+
+        listViewContent.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScroll(
                 view: AbsListView?,
                 firstVisibleItem: Int,
@@ -102,9 +114,9 @@ class MainActivity : AppCompatActivity(),EmojiViewListener {
             }
 
             override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
-                if (rlComment.visibility == View.VISIBLE) {
-                    rlComment.visibility = View.GONE
-                }
+//                if (rlComment.visibility == View.VISIBLE) {
+//                    rlComment.visibility = View.GONE
+//                }
             }
         })
 
@@ -117,11 +129,19 @@ class MainActivity : AppCompatActivity(),EmojiViewListener {
             )
             dataBean?.replyList = data
             et_input_container.setText("")
-            rlComment.visibility = View.GONE
+//            rlComment.visibility = View.GONE
             KeyBoardUtils.hiddenKeyBoard(this)
 
         }
 
+    }
+
+
+    override fun onBackPressed() {
+
+        if(!eEmotionInputDetector.interceptBackPress()){
+            super.onBackPressed()
+        }
     }
 
 
@@ -131,13 +151,70 @@ class MainActivity : AppCompatActivity(),EmojiViewListener {
 
     inner class ActionAdapter(context: Context) : CommonAdapter<DataBean>(context, R.layout.item_layout_comment), FillCommentListener<ReplyListBean> {
 
-        override fun commentType(bean: ReplyListBean): Int {
-            return when {
-                bean.status == "1" -> COMMENT_AUTHOR
-                bean.status == "2" -> AUTHOR_REPLY
-                bean.status == "3" -> USER_USER
-                bean.status == "4" -> REPLY_AUTHOR
-                else -> 0
+
+        init {
+            val configure = NineGridViewConfigure()
+            with(configure.buildBaseStyleParams()) {
+                // 必须设置，否则不加载图片
+                onNineGridImageListener = object : ImageLoader.OnNineGridImageListener {
+                    override fun <T : Any> displayImage(
+                        context: Context,
+                        imageView: ImageView,
+                        obj: T
+                    ) {
+
+                        //真实开发中，如果你的列表显示 全是图片并多，
+                        // 列表在滑动时 不要加载图片，等待停止滑动后做加载。
+                        //且应要求后端 分多套分辨图返回
+                        Glide.with(context).load(obj.toString())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .error(R.drawable.ic_default_color)
+                            .override(150, 150)
+                            .into(imageView)
+
+                    }
+                }
+            }
+
+            //可选参数 配置
+            with(configure.buildPreImageStyleParams()) {
+                //加载图片的必须设置
+                this.onPreImageListener = object : ImageLoader.OnPreImageListener {
+                    override fun <E : Any?> loadPreImage(
+                        context: Context,
+                        imageView: ImageView,
+                        obj: E,
+                        index: Int
+                    ) {
+                        Glide.with(context).load(obj.toString())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .error(R.drawable.ic_default_color)
+                            .override(150, 150)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(imageView)
+
+                    }
+                }
+            }
+
+            with(configure.buildIndicatorStyleParams()) {
+                //文本显示
+                this.buildStyleText().apply {
+                    preTipColor = UiCompat.getColor(resources, R.color.red) //设置指示器文本颜色
+                    preTipTextSize = ScreenUtils.sp2px(this@MainActivity, 12f).toInt()
+                }
+
+            }
+        }
+
+
+        override fun commentType(bean: ReplyListBean): MsgType {
+            return when (bean.status) {
+                "1" -> MsgType.COMMENT_AUTHOR
+                "2" -> MsgType.AUTHOR_REPLY
+                "3" -> MsgType.USER_USER
+                "4" -> MsgType.REPLY_AUTHOR
+                else -> MsgType.OTHER
             }
         }
 
@@ -166,12 +243,14 @@ class MainActivity : AppCompatActivity(),EmojiViewListener {
 
             JavaUtils.outRedPrint("position: " + position + " 内容：" + "${if (entity.replyList == null) "null" else entity.replyList.toString()}")
 
-            var container = holder.getView<CommentWithReplyContainer>(R.id.commentContainer)
+            var container =
+                holder.getView<CommentWithReplyContainer<DataBean, ReplyListBean>>(R.id.commentContainer)
 
             holder.getView<ImageView>(R.id.ivComment).setOnClickListener {
                 index = position
                 dataBean = entity
-                rlComment.visibility = View.VISIBLE
+//                rlComment.visibility = View.VISIBLE
+
             }
 
             holder.setText(R.id.tvContent, entity.content)
@@ -179,44 +258,47 @@ class MainActivity : AppCompatActivity(),EmojiViewListener {
                 .setText(R.id.tvTime, entity.createDate)
 
 
-            container.setCommentItemClickListener { itemPosition, index, data ->
+            container
+                .setOnPackingItemListener(object : OnPackingItemListener {
+                    override fun packView(
+                        fromUser: String,
+                        toUser: String,
+                        content: String,
+                        type: MsgType
+                    ): View {
 
-                Log.e("----------", "这是第${itemPosition}说说的第${index}条评论")
-                var dialog = InputInfoDialog(mContext)
-                dialog.initTips("回复 第${index}用户")
-                    .setOutTouchside(true)
-                    .setCallBack { str ->
-                        run {
-                            //TODO  这里只是模拟，不惧有任何意义，真实需根据项目业务逻辑做相应处理
-                            ToastTool.showContent("评论成功")
-                            var data = DataHelper.insetReply(entity.replyList, index, str)
-                            container.setData(position, data)
-
-                            KeyBoardUtils.hiddenKeyBoard(mContext)
-                        }
+                        return View(mContext)
                     }
-                    .showDialog()
-            }
 
+                })
+                .setCommentItemClickListener(object : CommentItemClickListener {
+                    override fun onClick(itemPosition: Int, commentIndex: Int, data: Any) {
+                        Log.e("----------", "这是第${itemPosition}说说的第${index}条评论")
+                        var dialog = InputInfoDialog(mContext)
+                        dialog.initTips("回复 第${index}用户")
+                            .setOutTouchside(true)
+                            .setCallBack { str ->
+                                run {
+                                    //TODO  这里只是模拟，不惧有任何意义，真实需根据项目业务逻辑做相应处理
+                                    ToastTool.showContent("评论成功")
+                                    var data = DataHelper.insetReply(entity.replyList, index, str)
+                                    container.setData(position, data)
+
+                                    KeyBoardUtils.hiddenKeyBoard(mContext)
+                                }
+                            }
+                            .showDialog()
+                    }
+
+
+                })
 
             // 这里是填充每条评论的 回调，触发频率非常高，不要再这里做任何耗时操作。
             container.setFillCommentListener(this)
-            container.setData(position, entity.replyList)
+            container.setData(position, entity?.replyList)
+            holder.getView<NineGridView<String>>(R.id.nineGrdiView).setData()
 
 
-            try {
-
-                val builder = NineGridView.NineGridViewBuilder<String>(mContext)
-                    .setNineGridViewConfigure(DataHelper.configure)
-                    .setImageInfo(entity.images)
-
-                holder.getView<NineGridView<String>>(R.id.nineGrdiView)
-                    .setNineAdapter(builder.buildAdpter())
-
-            } catch (e: IllegalAccessException) {
-                e.printStackTrace()
-            }
         }
     }
-
 }

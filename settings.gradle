@@ -1,2 +1,4 @@
+include ':module_emoji'
+include ':module_room'
 include ':app', ':corelib'
 rootProject.name='CommentWithReply'

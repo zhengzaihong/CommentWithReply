@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
 
             <FrameLayout
@@ -134,6 +134,7 @@
                 android:visibility="visible" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:orientation="horizontal">

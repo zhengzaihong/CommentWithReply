@@ -105,7 +105,7 @@
     </RelativeLayout>
 
 
-    <com.zzh.corelib.view.CommentWithReplyContainer
+    <com.room.core.view.CommentWithReplyContainer
         android:layout_marginBottom="@dimen/len_10"
         android:layout_marginTop="@dimen/len_5"
         android:layout_marginLeft="@dimen/len_50"
@@ -117,5 +117,5 @@
         app:textSize="@dimen/font_14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </com.zzh.corelib.view.CommentWithReplyContainer>
+    </com.room.core.view.CommentWithReplyContainer>
 </LinearLayout>

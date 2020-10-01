@@ -1,7 +1,7 @@
 package com.zzh.commentwithreply.utils;
 
+import com.emoji.core.emoji.EmojiFactory;
 import com.zzh.commentwithreply.R;
-import com.zzh.corelib.emoji.EmojiFactory;
 
 import java.util.LinkedHashMap;
 
