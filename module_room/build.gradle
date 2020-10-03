@@ -45,7 +45,7 @@ publish {
     artifactId = 'room'
     userOrg = 'zhengzaihong'
     groupId = 'com.zzh'
-    uploadName = "roomView"
+    uploadName = "room"
     publishVersion = '0.1.0'
     desc = 'The realization is like QQ, micro blog spatial dynamic wireless hierarchical list'
     website = 'https://github.com/zhengzaihong/CommentWithReply.git'

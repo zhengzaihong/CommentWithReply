@@ -1,17 +1,17 @@
 
-高仿QQ 新浪空间控件
+高仿QQ 新浪空间控件,完美解决开发中可能会遇到的动态列表嵌套带来的卡顿性能等问题
 
-##完美打造类似QQ 微信 新浪空间无限动态列表层级控件以及表情包处理库
+##简易打造类似QQ 微信 新浪核心无限动态列表层级控件以及表情包处理库
 
 <img src="https://github.com/zhengzaihong/CommentWithReply/blob/master/images/pre.gif" width="300" height="500" alt="note"/>
 
 依赖地址：
 
-  //容器组件
-  implementation 'com.zzh:roomView:0.1.0'
+    //容器组件
+    implementation 'com.zzh:room:0.1.0'
 
-  //表情Lib，默认提供了微信和QQ基础表情包,可自由添加
-  implementation 'com.zzh:emoji:0.1.0'
+    //表情Lib，默认提供了微信和QQ基础表情包,可自由添加
+    implementation 'com.zzh:emoji:0.1.0'
 
 大致使用：
 
