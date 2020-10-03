@@ -115,6 +115,7 @@
         app:replySplitColor="#666666"
         app:textColor="#e0a0d0"
         app:textSize="@dimen/font_14"
+        app:replyTips="@string/comment_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </com.room.core.view.CommentWithReplyContainer>

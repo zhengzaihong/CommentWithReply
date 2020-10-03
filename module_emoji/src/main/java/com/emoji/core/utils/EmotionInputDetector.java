@@ -23,7 +23,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.emoji.core.emoji.EditWatcher;
 import com.emoji.core.emoji.PanelController;
-import com.emoji.core.interfaces.EmojiViewListener;
+import com.emoji.core.interfaces.PanelViewListener;
+import com.emoji.core.interfaces.SoftInputlListener;
 import com.emoji.core.ui.EmojiFragment;
 
 /**
@@ -34,11 +35,13 @@ import com.emoji.core.ui.EmojiFragment;
  * describe: TODO
  **/
 
+
 public class EmotionInputDetector {
 
     private static final String SHARE_PREFERENCE_NAME = "com.easy.emoji";
     private static final String SHARE_PREFERENCE_TAG = "soft_input_height";
 
+    private boolean outTouchOffSort = false;
     private Activity mActivity;
     private InputMethodManager mInputManager;
     private SharedPreferences sp;
@@ -46,10 +49,9 @@ public class EmotionInputDetector {
     private CheckBox mEmojiView;
     private EditText mEditText;
     private View mSendButton;
-
     private View contentPannel;
-
-    private EmojiViewListener emojiViewListener;
+    private PanelViewListener panelViewListener;
+    private SoftInputlListener softInputlListener;
 
     private FragmentTransaction fragmentTransaction;
 
@@ -65,14 +67,24 @@ public class EmotionInputDetector {
     }
 
 
-    public EmotionInputDetector setEmojiViewListener(EmojiViewListener emojiViewListener) {
-        this.emojiViewListener = emojiViewListener;
+    public EmotionInputDetector setPanelViewListener(PanelViewListener panelViewListener) {
+        this.panelViewListener = panelViewListener;
         return this;
     }
 
+    public EmotionInputDetector setSoftInputlListener(SoftInputlListener softInputlListener) {
+        this.softInputlListener = softInputlListener;
+        return this;
+    }
+
+    public EmotionInputDetector setOutTouchOffSort(boolean outTouchOffSort) {
+        this.outTouchOffSort = outTouchOffSort;
+        return this;
+    }
 
     /**
      * 开启表情面板
+     *
      * @param containerViewId 容器id
      * @param emojiType       表情包的key
      */
@@ -96,33 +108,31 @@ public class EmotionInputDetector {
     }
 
 
-
-
-
     public EmotionInputDetector build() {
-
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN |
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         hideSoftInput();
+        if(null!=softInputlListener){
+            softInputlListener.softInputClosed();
+        }
         return this;
     }
 
 
     public EmotionInputDetector create() {
 
-        this.mEditText = emojiViewListener.bindInputEditView();
-        this.mEmotionLayout = emojiViewListener.bindEmotionView();
-        this.mEmojiView = emojiViewListener.bindEmotionButton();
-        this.mSendButton = emojiViewListener.bindSendButton();
-
-        this.contentPannel = emojiViewListener.bindContentView();
+        this.mEditText = panelViewListener.bindInputEditView();
+        this.mEmotionLayout = panelViewListener.bindEmotionView();
+        this.mEmojiView = panelViewListener.bindEmotionButton();
+        this.mSendButton = panelViewListener.bindSendButton();
+        this.contentPannel = panelViewListener.bindContentView();
 
         if (null == mEditText || mEmotionLayout == null || mEmojiView == null || mSendButton == null) {
-            throw new RuntimeException("please implements EmojiViewListener and return not null view");
-        }
+            throw new RuntimeException("please implement PanelViewListener and return not null view");
+                                      }
 
-        mEmojiView.setOnClickListener(new View.OnClickListener() {
-            @Override
+                mEmojiView.setOnClickListener(new View.OnClickListener() {
+                    @Override
             public void onClick(View v) {
                 if (mEmotionLayout.isShown()) {
                     lockContentHeight();
@@ -142,6 +152,15 @@ public class EmotionInputDetector {
             }
         });
 
+        if (outTouchOffSort) {
+            contentPannel.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    build();
+                    return false;
+                }
+            });
+        }
         mEditText.addTextChangedListener(new EditWatcher(mSendButton, mEditText));
         mEditText.requestFocus();
         mEditText.setOnTouchListener(new View.OnTouchListener() {
@@ -163,12 +182,10 @@ public class EmotionInputDetector {
         });
 
 
-
         return this;
     }
 
     public boolean interceptBackPress() {
-        // TODO: 15/11/2 change this method's name
         mEmojiView.setChecked(!mEmojiView.isChecked());
         if (mEmotionLayout.isShown()) {
             hideEmotionLayout(false);
@@ -236,7 +253,6 @@ public class EmotionInputDetector {
         int screenHeight = mActivity.getWindow().getDecorView().getRootView().getHeight();
         int softInputHeight = screenHeight - r.bottom;
         if (Build.VERSION.SDK_INT >= 20) {
-            // When SDK Level >= 20 (Android L), the softInputHeight will contain the height of softButtonsBar (if has)
             softInputHeight = softInputHeight - getSoftButtonsBarHeight();
         }
         if (softInputHeight < 0) {

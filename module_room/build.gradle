@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'com.novoda.bintray-release'
 android {
 
     compileSdkVersion versions.compileSdk
@@ -21,6 +21,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    //处理所有报META-INF/*'的错误
+    packagingOptions {
+        exclude('META-INF/MANIFEST.MF')
+    }
+    lintOptions{
+        abortOnError false
+    }
+
 }
 
 dependencies {
@@ -29,4 +38,23 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.3.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
+}
+
+//添加
+publish {
+    artifactId = 'room'
+    userOrg = 'zhengzaihong'
+    groupId = 'com.zzh'
+    uploadName = "roomView"
+    publishVersion = '0.1.0'
+    desc = 'The realization is like QQ, micro blog spatial dynamic wireless hierarchical list'
+    website = 'https://github.com/zhengzaihong/CommentWithReply.git'
+}
+
+tasks.withType(Javadoc) {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
 }

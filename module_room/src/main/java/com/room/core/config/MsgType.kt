@@ -30,9 +30,17 @@ enum class MsgType {
      */
     USER_USER,
 
+
+    /**
+     * 无评论
+     */
+    EMPTY,
+
+
     /**
      * 其他
      */
     OTHER;
+
 
 }

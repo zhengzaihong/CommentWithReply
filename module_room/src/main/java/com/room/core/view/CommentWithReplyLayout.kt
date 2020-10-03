@@ -17,7 +17,7 @@ import com.room.core.interfaces.OnPackingItemListener
  * Email:1096877329@qq.com
  * creat_date: 2019/12/18
  * creat_time: 19:25
- * describe 用于包裹每行评论的容器
+ * describe 用于包裹每行数据的容器
  */
 class CommentWithReplyLayout @JvmOverloads constructor(
     context: Context?,
@@ -26,7 +26,6 @@ class CommentWithReplyLayout @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val WRAP_CONTENT = LayoutParams.WRAP_CONTENT
     private val MATCH_PARENT = LayoutParams.MATCH_PARENT
-    private val SPAN_INCLUSIVE_EXCLUSIVE = Spanned.SPAN_INCLUSIVE_EXCLUSIVE
     private var config: CommentLayoutParams? = null
     private var onPackingItemListener: OnPackingItemListener? = null
 
@@ -122,9 +121,9 @@ class CommentWithReplyLayout @JvmOverloads constructor(
         type: MsgType
     ) {
 
+        removeAllViews()
         var itmeView = onPackingItemListener?.packView(fromUser, toUser, content, type)
         itmeView?.let {
-            removeAllViews()
             this.addView(it)
         }
 

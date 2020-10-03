@@ -8,14 +8,14 @@ import java.util.LinkedHashMap;
 public class EmojiTools {
 
 
-    private static LinkedHashMap<String, LinkedHashMap<String, Integer>> emojiPack = new LinkedHashMap<>();
+    private static LinkedHashMap<String, LinkedHashMap<String, Integer>> emojiPack = EmojiFactory.getInstance().getEmojiPack();
     public static LinkedHashMap<String, Integer> emoJiMap = new LinkedHashMap<>();
     public static LinkedHashMap<String, Integer> xiaohua = new LinkedHashMap<>();
     public static LinkedHashMap<String, Integer> qqHashMap = new LinkedHashMap<>();
 
 
     public static void initEmoji() {
-        EmojiFactory.create().setPack(emojiPack);
+        EmojiFactory.getInstance().setPack(emojiPack);
     }
 
 

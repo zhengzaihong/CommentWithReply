@@ -26,7 +26,7 @@ open interface OnPackingItemListener {
         toUser: String,
         content: String,
         type: MsgType
-    ): View
+    ): View?
 
 
 }

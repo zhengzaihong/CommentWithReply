@@ -54,7 +54,7 @@ public class InputInfoDialog {
             content = etInputContent.getText().toString();
 
             if (TextUtils.isEmpty(content)) {
-                ToastTool.showContent("请输入内容！");
+                ToastTool.show("请输入内容！");
                 return;
             }
             if (null != callBack) {
