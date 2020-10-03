@@ -1,14 +1,19 @@
-# CommentWithReply
+
 高仿QQ 新浪空间控件
 
-##打造类似QQ 微信空间无限动态列表层级控件
+##完美打造类似QQ 微信 新浪空间无限动态列表层级控件以及表情包处理库
 
+<img src="https://github.com/zhengzaihong/CommentWithReply/blob/master/images/pre.gif" width="300" height="500" alt="note"/>
 
 依赖地址：
 
- implementation 'com.zzh:roomView:0.1.0'
+  //容器组件
+  implementation 'com.zzh:roomView:0.1.0'
 
-控件使用：
+  //表情Lib，默认提供了微信和QQ基础表情包,可自由添加
+  implementation 'com.zzh:emoji:0.1.0'
+
+大致使用：
 
 1.布局中使用 CommentWithReplyContainer容器,该控件往往需要结合ListView或者RecyleView一起使用
 
@@ -56,3 +61,17 @@
             })
             .setFillCommentListener(this)
             .setData(position, "数据集合")
+
+ 4.如果需要表情面板请先添加上面表情包依赖库,并提供Fragment的一个容器FrameLayout布局，且必须实现 PanelViewListener接口中所需要的View
+
+
+
+          EmotionInputDetector
+            .with(this) //传入上下文
+            .setPanelViewListener(this) //设置绑定各种View的监听回调
+            .setPannelFragment(R.id.contanierFrameLayout, "0") //设置表情面板View，内部采用Fragment实现，因此这里传入容器ID 即可
+            .setOutTouchOffSort(true) //是否开启非键盘区域触摸关闭键盘
+            .setSoftInputlListener { //添加键盘关闭的回调信息
+                //处理关闭软盘后相关逻辑
+            }
+            .create()
