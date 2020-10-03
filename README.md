@@ -4,8 +4,8 @@
 
 <img src="https://github.com/zhengzaihong/CommentWithReply/blob/master/images/pre.gif" width="300" height="500" alt="note"/>
 
-上图gif没加载完成看着可能会卡顿，欢迎下载demo
-[demo下载](https://github.com/zhengzaihong/CommentWithReply/app-debug.apk)
+上图gif没加载完成看着可能会卡顿，欢迎下载查看
+[demo下载](https://github.com/zhengzaihong/CommentWithReply/blob/master/app-debug.apk)
 
 依赖地址：
 
